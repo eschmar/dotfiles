@@ -53,12 +53,14 @@ done
 
 printf " > ${MAGENTA}Installing brew and dependencies.${NC}\n"
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+cat ./brew.txt | xargs brew install
 
 #
 #   Nano
 #
 
-brew install homebrew/dupes/nano
+# brew --link nano
+# include "/usr/local/Cellar/nano/*/share/nano/*.nanorc"
 
 #
 #   //todo
