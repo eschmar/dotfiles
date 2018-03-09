@@ -35,6 +35,32 @@ echo
 git config --global user.email "$REPLY"
 
 #
+#   Brew
+#
+
+printf " > ${MAGENTA}Installing brew and dependencies.${NC}\n"
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+cat ./brew.txt | xargs brew install
+
+#
+#   PHP & Environment
+#
+
+composer global require laravel/valet
+export PATH=$PATH:~/.composer/vendor/bin
+valet install
+mkdir -p ~/Sites
+# cd ~/Sites && valet park
+
+#
+#   Nano
+#
+
+# brew --link nano
+# include "/usr/local/Cellar/nano/*/share/nano/*.nanorc"
+
+
+#
 #   Dotfiles
 #
 
@@ -46,21 +72,6 @@ files="bash_profile nanorc"
 for file in $files; do
     ln -s $dir/$file ~/.$file
 done
-
-#
-#   Brew
-#
-
-printf " > ${MAGENTA}Installing brew and dependencies.${NC}\n"
-/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-cat ./brew.txt | xargs brew install
-
-#
-#   Nano
-#
-
-# brew --link nano
-# include "/usr/local/Cellar/nano/*/share/nano/*.nanorc"
 
 #
 #   //todo
