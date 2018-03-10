@@ -19,7 +19,7 @@ git:
 
 brew:
 	@echo " > ${MAGENTA}Installing brew and dependencies.${NC}"
-	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	~/dotfiles/shell/brew.sh
 	cat ./brew.txt | xargs brew install
 
 php:

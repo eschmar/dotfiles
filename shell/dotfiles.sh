@@ -1,3 +1,4 @@
+#!/bin/bash
 dir=~/dotfiles/dot
 files="bash_profile nanorc"
 

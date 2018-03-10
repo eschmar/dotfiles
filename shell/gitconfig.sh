@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Git config
 read -p " > ${MAGENTA}Name for git config? " -r
 echo
