@@ -7,8 +7,10 @@ default: welcome git brew php nano dotfiles
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
+	chmod +x ~/dotfiles/shell/*.sh
 
 git:
+	mkdir -p ~/dotfiles/build
 	@echo " > ${MAGENTA}Configuring git.${NC}"
 	curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ./build/.git-prompt.sh
 	curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ./build/.git-completion.bash
