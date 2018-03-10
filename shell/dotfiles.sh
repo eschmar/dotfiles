@@ -3,5 +3,6 @@ dir=~/dotfiles/dot
 files="bash_profile nanorc"
 
 for file in $files; do
+    rm -f ~/.$file
     ln -s $dir/$file ~/.$file
 done
