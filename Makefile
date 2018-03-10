@@ -8,6 +8,7 @@ default: welcome git brew brewinstall php dotfiles
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
 	chmod +x ~/dotfiles/shell/*.sh
+	chmod +x ~/dotfiles/alias/*
 
 git:
 	mkdir -p ~/dotfiles/build
