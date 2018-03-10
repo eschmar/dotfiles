@@ -20,6 +20,9 @@ git:
 brew:
 	@echo " > ${MAGENTA}Installing brew and dependencies.${NC}"
 	~/dotfiles/shell/brew.sh
+
+brewinstall:
+	brew tap homebrew/php
 	cat ./brew.txt | xargs brew install
 
 php:
