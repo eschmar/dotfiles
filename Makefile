@@ -3,7 +3,7 @@ CYAN=\033[0;36m
 MAGENTA=\033[0;35m
 NC=\033[0m
 
-default: welcome git brew php nano dotfiles
+default: welcome git brew brewinstall php dotfiles
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
@@ -28,14 +28,9 @@ brewinstall:
 php:
 	@echo " > ${MAGENTA}Installing PHP and Environment.${NC}"
 	composer global require laravel/valet
-	export PATH=$PATH:~/.composer/vendor/bin && valet install
+	valet install
 	mkdir -p ~/Sites
 	cd ~/Sites && valet park
-
-nano:
-	@echo " > ${MAGENTA}Configuring Nano.${NC}"
-	brew --link nano
-	include "/usr/local/Cellar/nano/*/share/nano/*.nanorc"
 
 dotfiles:
 	@echo " > ${MAGENTA}Moving dotfiles.${NC}"
@@ -45,12 +40,8 @@ dotfiles:
 #   //todo
 #
 
-# - brew install list
 # - gif.sh
 # - heroku.sh
 # - Sublime settings
 # - Visual Studio Code Settings
-# - Terminal settings, use own theme for everything?
-# - php72/valet?
 # - patch-edid.rb? Display patch
-# - git config! prompt?
