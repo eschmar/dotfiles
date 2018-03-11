@@ -1,6 +1,6 @@
 #!/bin/bash
 dir=~/dotfiles/dot
-files="bash_profile nanorc"
+files="bash_profile nanorc alias"
 
 for file in $files; do
     rm -f ~/.$file
