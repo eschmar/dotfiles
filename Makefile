@@ -29,7 +29,7 @@ brewinstall:
 php:
 	@echo " > ${MAGENTA}Installing PHP and Environment.${NC}"
 	composer global require laravel/valet
-	valet install
+	export PATH=$PATH:~/.composer/vendor/bin && valet install
 	mkdir -p ~/Sites
 	cd ~/Sites && valet park
 
