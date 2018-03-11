@@ -7,9 +7,14 @@ NC='\033[0m'
 
 if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ]; then
     printf "${MAGENTA}Invalid input..${NC}\n"
-    printf "${CYAN}gitauthor <old-email> <new-name> <new-email>${NC}\n"
+    printf "${CYAN}gitauthor <old-email> <new-name> <new-email>${NC}\n\n"
+
+    printf "${MAGENTA}Help:${NC}\n"
+    printf "Pre: ${CYAN}git clone --bare https://github.com/user/repo.git${NC}\n"
+    printf "Post: ${CYAN}git push --force --tags origin 'refs/heads/*'${NC}\n"
     exit
 fi
+
 
 git filter-branch --env-filter '
 OLD_EMAIL=$1
