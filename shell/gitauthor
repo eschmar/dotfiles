@@ -6,7 +6,7 @@ MAGENTA='\033[0;35m'
 NC='\033[0m'
 
 if [ "$1" == "" ] || [ "$2" == "" ] || [ "$3" == "" ]; then
-    printf "${MAGENTA}Invalid input..${NC}\n"
+    printf "${MAGENTA}Requires three arguments.${NC}\n"
     printf "${CYAN}gitauthor <old-email> <new-name> <new-email>${NC}\n\n"
 
     printf "${MAGENTA}Help:${NC}\n"
