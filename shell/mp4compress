@@ -1,0 +1,14 @@
+#!/bin/bash
+
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
+
+if [ "$1" == "" ] || [ "$2" == "" ]; then
+    printf "${MAGENTA}Requires at least input and output file.${NC}\n"
+    printf "${CYAN}mp4compress <input> <output>${NC}\n"
+    exit
+fi
+
+ffmpeg -i $1 -vcodec libx264 -crf 20 $2
