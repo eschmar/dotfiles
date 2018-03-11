@@ -3,7 +3,7 @@
 # Git
 alias gl='git log --oneline --all --graph --decorate'
 alias gitcount='git shortlog -s'
-alias gituser='git config user.email'
+alias gituser='function _gituser(){ git config user.name $1; git config user.email $2; }; _gituser'
 
 # Heroku
 alias herokumap='heroku git:remote -a'
