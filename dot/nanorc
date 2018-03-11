@@ -1,1 +1,2 @@
 include "/usr/local/Cellar/nano/*/share/nano/*.nanorc"
+set constantshow

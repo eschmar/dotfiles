@@ -5,14 +5,19 @@ CYAN='\033[0;36m'
 MAGENTA='\033[0;35m'
 NC='\033[0m'
 
-if [ "$1" == "" ] || [ "$2" == "" ]; then
-    printf "${MAGENTA}Requires two arguments.${NC}\n"
+if [ "$1" == "" ]; then
+    printf "${MAGENTA}Requires at least input file.${NC}\n${CYAN}mp4gif <input> [fps] [width]${NC}\n"
     exit
 fi
+
+palette="palette.png"
+filters="fps=${2:-24},scale=${3:-320}:-1:flags=lanczos"
+
+ffmpeg -v warning -i "$1" -vf "$filters,palettegen" -y "$palette"
+ffmpeg -v warning -i "$1" -i $palette -lavfi "$filters [x]; [x][1:v] paletteuse" -y out.gif
+
+rm palette.png
 
 # https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
 # ffmpeg -y -ss 30 -t 3 -i input.flv -vf fps=10,scale=320:-1:flags=lanczos,palettegen palette.png
 # ffmpeg -ss 30 -t 3 -i input.flv -i palette.png -filter_complex "fps=10,scale=320:-1:flags=lanczos[x];[x][1:v]paletteuse" output.gif
-
-ffmpeg -y -i $1 -vf fps=24,scale=320:-1:flags=lanczos,palettegen palette.png
-ffmpeg $1 -i palette.png -filter_complex "fps=24,scale=320:-1:flags=lanczos[x];[x][1:v]paletteuse" $2
