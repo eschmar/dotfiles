@@ -20,12 +20,9 @@ printf " > ${MAGENTA}Delete merged branches.${NC}\n"
 
 git branch --merged | grep -v -e "master" -e "development" | xargs git branch -D
 
-printf " > ${MAGENTA}Prune origin.${NC}\n"
+printf " > ${MAGENTA}Prune origin & upstream.${NC}\n"
 
 git remote prune origin
-
-printf " > ${MAGENTA}Prune upstream.${NC}\n"
-
 git remote prune upstream
 
 printf " > ${CYAN}Done.${NC}\n"
