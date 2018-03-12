@@ -3,7 +3,7 @@ CYAN=\033[0;36m
 MAGENTA=\033[0;35m
 NC=\033[0m
 
-default: welcome git brew brewinstall php dotfiles
+default: welcome git brew brewinstall php dotfiles screenshots
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
@@ -36,6 +36,11 @@ php:
 dotfiles:
 	@echo " > ${MAGENTA}Moving dotfiles.${NC}"
 	~/dotfiles/helper/dotfiles.sh
+
+screenshots:
+	mkdir -p ~/Pictures/screenshots
+	defaults write com.apple.screencapture location ~/Pictures/screenshots
+	killall SystemUIServer
 
 #
 #   //todo
