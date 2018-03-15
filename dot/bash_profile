@@ -5,7 +5,7 @@ export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
 
 # time: \D{%H:%M}
-export PS1="\n\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h \[\033[33;1m\]\w\[\033[32m\]\$(__git_ps1)\[\033[m\] $ "
+export PS1="\n\[\033[36m\]\u\[\033[m\]@\[\033[32m\]\h \[\033[0m\]\D{%H:%M} \[\033[33;1m\]\w\[\033[32m\]\$(__git_ps1)\[\033[m\] $ "
 
 source ~/dotfiles/dot/alias
 export EDITOR=/usr/bin/nano
