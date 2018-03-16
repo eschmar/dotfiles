@@ -14,3 +14,5 @@ export PATH="/usr/local/sbin:$PATH"
 export PATH=$PATH:~/.composer/vendor/bin
 export PATH=/usr/local/mysql/bin:$PATH
 export PATH=$PATH:~/dotfiles/shell
+
+export PATH=$PATH:"/Applications/Visual Studio Code.app/Contents/Resources/app/bin"

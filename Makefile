@@ -42,6 +42,14 @@ screenshots:
 	defaults write com.apple.screencapture location ~/Pictures/screenshots
 	killall SystemUIServer
 
+latex:
+	# install MacTeX
+	pip3 install Pygments
+
+vscode:
+	@echo " > ${MAGENTA}Configuring Visual Studio Code.${NC}"
+	~/dotfiles/helper/vscode.sh
+
 #
 #   //todo
 #
