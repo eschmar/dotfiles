@@ -13,4 +13,4 @@ alias youtube-pl='youtube-dl --ignore-errors --extract-audio --audio-format mp3 
 alias youtube-txt='function _youtubeTxt(){ cat $1 | while read line ; do youtube-dl -x --audio-format=mp3 --audio-quality=0 $line ; done; }; _youtubeTxt'
 
 # Sys
-alias duh='du -h -d 1'
+alias duh='du -h -d 1 | sort -h'
