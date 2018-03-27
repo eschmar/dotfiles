@@ -1,4 +1,5 @@
 # dotfiles
+Holds my personal dotfiles and macOS workstation setup steps.
 
 * [ ] Install XCode
 * [ ] Set up ssh keys
