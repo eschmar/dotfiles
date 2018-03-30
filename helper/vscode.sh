@@ -15,12 +15,15 @@ fi
 export PATH="\$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
 exts=(
-    streetsidesoftware.code-spell-checker
     James-Yu.latex-workshop
     PKief.material-icon-theme
-    felixfbecker.php-debug
-    neilbrayfield.php-docblocker
     bmewburn.vscode-intelephense-client
+    dbaeumer.vscode-eslint
+    felixfbecker.php-debug
+    ikappas.phpcs
+    mikestead.dotenv
+    neilbrayfield.php-docblocker
+    streetsidesoftware.code-spell-checker
 )
 
 for ext in ${exts[@]}; do
