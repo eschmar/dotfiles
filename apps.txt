@@ -2,16 +2,18 @@
 Android Studio
 Bear
 CotEditor
-Evoluent?
+Evoluent
 Firefox
 Google Chrome Canary
 Google Chrome
 Harvest
 IntelliJ IDEA
+Kactus
 KakaoTalk
 Kaleidoscope
 Kap
 Keynote
+Manta
 PDF Expert
 Postico
 Sequel Pro
@@ -28,8 +30,3 @@ VirtualBox
 Visual Studio Code
 WhatsApp
 Xcode
----
-Hexels 3
-Kactus
-Kelir
-Manta
