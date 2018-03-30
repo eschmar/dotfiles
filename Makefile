@@ -54,7 +54,6 @@ vscode:
 #   //todo
 #
 
-# - heroku.sh
 # - Sublime settings
 # - Visual Studio Code Settings
-# - patch-edid.rb? Display patch
+# - patch-edid.rb Display patch
