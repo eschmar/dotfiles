@@ -1,0 +1,22 @@
+#!/bin/bash
+
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
+
+if [ "$1" == "" ] || [ "$2" == "" ]; then
+    NAME="$(git config user.name)"
+    EMAIL="$(git config user.email)"
+
+    printf " > ${MAGENTA}user.name:${NC} ${NAME}\n"
+    printf " > ${MAGENTA}user.email:${NC} ${EMAIL}\n"
+    printf " > ${CYAN}gituser <name> <email>${NC}"
+    exit
+fi
+
+git config --unset-all user.name
+git config --unset-all user.email
+
+git config user.name "$1"
+git config user.email "$2"
