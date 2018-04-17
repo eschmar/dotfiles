@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Git
-alias gl='git log --oneline --all --graph --decorate'
+alias gl='git log --oneline --all --graph --decorate -n 10'
 alias gitcount='git shortlog -s'
 
 # Heroku
