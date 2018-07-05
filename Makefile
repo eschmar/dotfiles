@@ -23,7 +23,6 @@ brew:
 	~/dotfiles/helper/brew.sh
 
 brewinstall:
-	brew tap homebrew/php
 	cat ./brew.txt | xargs brew install
 
 php:

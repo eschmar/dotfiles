@@ -10,12 +10,11 @@ mpv
 nano
 node
 p7zip
-php72
-php72-imagick
-php72-xdebug
+php
 postgresql
 tree
 yarn
 youtube-dl
-mysql
+mysql@5.7
+pkg-config
 bat
