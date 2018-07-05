@@ -18,3 +18,4 @@ youtube-dl
 mysql@5.7
 pkg-config
 bat
+ack
