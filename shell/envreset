@@ -16,6 +16,6 @@ printf " > ${MAGENTA}Seed database..${NC}\n"
 php artisan db:seed -v
 
 printf " > ${MAGENTA}Run Unit Tests..${NC}\n"
-./vendor/bin/phpunit
+./vendor/bin/phpunit --no-coverage
 
 printf " > ${CYAN}Done.${NC}\n"
