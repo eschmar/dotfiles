@@ -3,7 +3,7 @@ CYAN=\033[0;36m
 MAGENTA=\033[0;35m
 NC=\033[0m
 
-default: welcome git brew brewinstall php dotfiles screenshots
+default: welcome git brew brewinstall php dotfiles finder screenshots
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
@@ -35,6 +35,10 @@ php:
 dotfiles:
 	@echo " > ${MAGENTA}Moving dotfiles.${NC}"
 	~/dotfiles/helper/dotfiles.sh
+
+finder:
+	# add full path to finder top bar
+	defaults write com.apple.finder _FXShowPosixPathInTitle -bool true; killall Finder
 
 screenshots:
 	mkdir -p ~/Pictures/screenshots
