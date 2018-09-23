@@ -3,7 +3,7 @@ CYAN=\033[0;36m
 MAGENTA=\033[0;35m
 NC=\033[0m
 
-default: welcome git brew brewinstall php dotfiles finder screenshots
+default: welcome git brew brewinstall php vim dotfiles finder screenshots
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
@@ -31,6 +31,11 @@ php:
 	export PATH=$PATH:~/.composer/vendor/bin && valet install
 	mkdir -p ~/Sites
 	cd ~/Sites && valet park
+
+vim:
+	@echo " > ${MAGENTA}Moving vim bundles.${NC}"
+	mkdir -p ~/.vim
+	cp -R ~/dotfiles/vim/ ~/.vim/
 
 dotfiles:
 	@echo " > ${MAGENTA}Moving dotfiles.${NC}"
