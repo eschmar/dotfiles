@@ -7,7 +7,7 @@ set nocompatible
 syntax on
 
 " choose color theme
-"set background=dark
+" http://vimcolors.com/244/seti/dark
 colorscheme seti
 
 set number                      "Line numbers are good
