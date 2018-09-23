@@ -1,0 +1,53 @@
+set nocompatible
+
+" 256 color terminal
+" set t_Co=256
+
+" turn on syntax highlighting
+syntax on
+
+" choose color theme
+"set background=dark
+colorscheme seti
+
+set number                      "Line numbers are good
+set backspace=indent,eol,start  "Allow backspace in insert mode
+set history=1000                "Store lots of :cmdline history
+set showcmd                     "Show incomplete cmds down the bottom
+set showmode                    "Show current mode down the bottom
+set autoread                    "Reload files changed outside vim
+set linespace=14
+set encoding=utf-8
+set fileencoding=utf-8
+set cursorline
+set ignorecase
+set whichwrap+=<,>,[,],h,l
+
+" disable mouse
+autocmd BufEnter * set mouse=
+
+" disable arrow keys in normal mode
+map <up> <nop>
+map <down> <nop>
+map <left> <nop>
+map <right> <nop>
+
+" faster access to command line
+nmap <space> :
+
+" turn off swap files
+set noswapfile
+set nobackup
+set nowb
+
+" indentation
+set autoindent
+set smartindent
+set smarttab
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set expandtab
+
+set nowrap       "Don't wrap lines
+set linebreak    "Wrap lines at convenient points
