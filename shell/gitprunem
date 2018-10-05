@@ -1,0 +1,29 @@
+#!/bin/bash
+echo
+
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+MAGENTA='\033[0;35m'
+NC='\033[0m'
+
+printf " > ${MAGENTA}Fetch origin & upstream.${NC}\n"
+
+git fetch origin
+git fetch upstream
+
+printf " > ${MAGENTA}Checkout and rebase master.${NC}\n"
+
+git checkout master
+git rebase upstream/master
+
+printf " > ${MAGENTA}Delete merged branches.${NC}\n"
+
+git branch --merged | grep -v -e "master" | xargs git branch -D
+
+printf " > ${MAGENTA}Prune origin & upstream.${NC}\n"
+
+git remote prune origin
+git remote prune upstream
+
+printf " > ${CYAN}Done.${NC}\n"
+

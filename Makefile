@@ -13,10 +13,7 @@ welcome:
 git:
 	mkdir -p ~/dotfiles/build
 	@echo " > ${MAGENTA}Configuring git.${NC}"
-	curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-prompt.sh -o ./build/.git-prompt.sh
-	curl https://raw.githubusercontent.com/git/git/master/contrib/completion/git-completion.bash -o ./build/.git-completion.bash
-	# test -f ./build/.git-completion.bash && . $_
-	~/dotfiles/helper/gitconfig.sh
+	~/dotfiles/helper/git.sh
 
 brew:
 	@echo " > ${MAGENTA}Installing brew and dependencies.${NC}"
@@ -39,6 +36,7 @@ vim:
 
 dotfiles:
 	@echo " > ${MAGENTA}Moving dotfiles.${NC}"
+	touch ~/dotfiles/dot/env
 	~/dotfiles/helper/dotfiles.sh
 
 finder:
