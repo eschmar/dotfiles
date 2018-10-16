@@ -1,6 +1,7 @@
 composer
 ffmpeg
 git-lfs
+git-open
 gnuplot
 heroku/brew/heroku
 htop
