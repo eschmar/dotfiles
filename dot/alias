@@ -21,7 +21,12 @@ alias duh='du -h -d 1 | sort -h'
 alias encryptCompress='function _encryptCompress(){ tar -czf - $1 | openssl enc -aes-256-cbc -e > $2 ; }; _encryptCompress'
 alias decryptCompress='function _decryptCompress(){ openssl enc -aes-256-cbc -d -in $1 | tar xz ; }; _decryptCompress'
 
+alias vid2fullhd='function _vid2fullhd(){ ffmpeg -i $1 -s 1080x1920 -acodec copy $1-fhd.mp4  ; }; _vid2fullhd'
+
 # Java
+alias jarList='jar tvf'
+
+# Java versions
 #alias j12="export JAVA_HOME=`/usr/libexec/java_home -v 12`; java -version"
 alias j11="export JAVA_HOME=`/usr/libexec/java_home -v 11`; java -version"
 #alias j10="export JAVA_HOME=`/usr/libexec/java_home -v 10`; java -version"
