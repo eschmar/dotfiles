@@ -9,7 +9,7 @@ httpie
 imagemagick
 mpv
 nano
-node@8
+node@10
 p7zip
 php
 postgresql

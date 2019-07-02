@@ -23,6 +23,8 @@ alias decryptCompress='function _decryptCompress(){ openssl enc -aes-256-cbc -d 
 
 alias vid2fullhd='function _vid2fullhd(){ ffmpeg -i $1 -s 1080x1920 -acodec copy $1-fhd.mp4  ; }; _vid2fullhd'
 
+alias bashbible='open https://github.com/dylanaraps/pure-bash-bible'
+
 # Java
 alias jarList='jar tvf'
 
