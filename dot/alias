@@ -10,6 +10,7 @@ alias herokumap='heroku git:remote -a'
 # Youtube
 alias youtube-pl='youtube-dl --ignore-errors --extract-audio --audio-format mp3 --download-archive archive.txt'
 alias youtube-txt='function _youtubeTxt(){ cat $1 | while read line ; do youtube-dl -x --audio-format=mp3 --audio-quality=0 $line ; done; }; _youtubeTxt'
+alias youtube-mp3='youtube-dl --ignore-errors -x --audio-quality 0 --audio-format best'
 
 # Zip
 alias tarz='tar -czvf'
