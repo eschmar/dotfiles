@@ -3,6 +3,7 @@
 # Git
 alias gl='git log --oneline --all --graph --decorate -n 10'
 alias gitcount='git shortlog -s'
+alias gitworktree='function _gitworktree(){ git worktree add -b $1 $2  ; }; _gitworktree'
 
 # Heroku
 alias herokumap='heroku git:remote -a'
