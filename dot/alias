@@ -24,8 +24,9 @@ alias encryptCompress='function _encryptCompress(){ tar -czf - $1 | openssl enc 
 alias decryptCompress='function _decryptCompress(){ openssl enc -aes-256-cbc -d -in $1 | tar xz ; }; _decryptCompress'
 
 alias vid2fullhd='function _vid2fullhd(){ ffmpeg -i $1 -s 1080x1920 -acodec copy $1-fhd.mp4  ; }; _vid2fullhd'
-
+alias vidMovToMp4='function _vidMovToMp4(){ ffmpeg -i $1 -vcodec h264 -acodec aac $2 ; }; _vidMovToMp4'
 alias vidScaleTo='function _vidScaleTo(){ ffmpeg -i $1 -vf scale="$2:-1" $1-scaled-$2.mp4  ; }; _vidScaleTo'
+alias vidTemp='ffmpeg -f lavfi -i testsrc -t 30 -pix_fmt yuv420p vidTemp.mp4'
 
 alias bashbible='open https://github.com/dylanaraps/pure-bash-bible'
 
