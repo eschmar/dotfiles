@@ -18,7 +18,7 @@ git rebase upstream/development
 
 printf " > ${MAGENTA}Delete merged branches.${NC}\n"
 
-git branch --merged | grep -v -e "master" -e "development" | xargs git branch -D
+git branch --merged | grep -v -e "master" -e "main" -e "development" | xargs git branch -D
 
 printf " > ${MAGENTA}Prune origin & upstream.${NC}\n"
 
