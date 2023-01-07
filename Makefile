@@ -22,6 +22,10 @@ brew:
 brewinstall:
 	cat ./brew.txt | xargs brew install
 
+ffmpeg:
+	brew tap homebrew-ffmpeg/ffmpeg
+	brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-fdk-aac --with-librsvg --with-libsoxr --with-opencore-amr --with-openh264 --with-openjpeg --with-rav1e --with-webp --with-zimg --with-libxml2 --with-libgsm --with-speex --with-xvid
+
 php:
 	@echo " > ${MAGENTA}Installing PHP and Environment.${NC}"
 	composer global require laravel/valet
