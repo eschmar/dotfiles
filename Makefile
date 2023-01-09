@@ -56,10 +56,6 @@ latex:
 	# install MacTeX
 	pip3 install Pygments
 
-vscode:
-	@echo " > ${MAGENTA}Configuring Visual Studio Code.${NC}"
-	~/dotfiles/helper/vscode.sh
-
 #
 #   //todo
 #
