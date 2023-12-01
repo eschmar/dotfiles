@@ -6,10 +6,10 @@ htop
 httpie
 imagemagick
 mpv
-postgresql@13
-node@16
+postgresql@16
+node@20
 tree
-youtube-dl
+yt-dlp
 pkg-config
 ack
 rclone

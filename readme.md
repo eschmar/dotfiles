@@ -9,4 +9,4 @@ Holds parts of my personal dotfiles and macOS workstation setup steps.
 * [ ] `System Preferences` > `Trackpad` > `Scroll & Zoom` > unselect the `Scroll direction: Neutral`.
 * [ ] `System Preferences` > `Dock` > `Magnification` && `Automatically hide`
 * [ ] `System Preferences` > `Security & Privacy` > `Require password immediately`
-* [ ] Set up git integration in Kaleidoscope
+* [ ] Download [OpenJDK 8 SE](https://www.azul.com/downloads/?version=java-8-lts&os=macos&package=jdk#zulu) and [the latest LTS](https://adoptium.net/en-GB/temurin/releases/?os=mac)
