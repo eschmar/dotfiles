@@ -3,7 +3,7 @@ CYAN=\033[0;36m
 MAGENTA=\033[0;35m
 NC=\033[0m
 
-default: welcome git brew brewinstall php vim dotfiles finder screenshots
+default: welcome git brew brewinstall vim dotfiles finder screenshots
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
@@ -25,13 +25,6 @@ brewinstall:
 ffmpeg:
 	brew tap homebrew-ffmpeg/ffmpeg
 	brew install homebrew-ffmpeg/ffmpeg/ffmpeg --with-fdk-aac --with-librsvg --with-libsoxr --with-opencore-amr --with-openh264 --with-openjpeg --with-rav1e --with-webp --with-zimg --with-libxml2 --with-libgsm --with-speex --with-xvid
-
-php:
-	@echo " > ${MAGENTA}Installing PHP and Environment.${NC}"
-	composer global require laravel/valet
-	export PATH=$PATH:~/.composer/vendor/bin && valet install
-	mkdir -p ~/Sites
-	cd ~/Sites && valet park
 
 vim:
 	@echo " > ${MAGENTA}Moving vim bundles.${NC}"
@@ -55,11 +48,3 @@ screenshots:
 latex:
 	# install MacTeX
 	pip3 install Pygments
-
-#
-#   //todo
-#
-
-# - Sublime settings
-# - Visual Studio Code Settings
-# - patch-edid.rb Display patch
