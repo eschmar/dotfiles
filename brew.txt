@@ -16,3 +16,9 @@ rclone
 cmake
 hugo
 ninja
+clang-format
+doxygen
+heroku
+sqlite
+yt-dlp
+blackhole-2ch
