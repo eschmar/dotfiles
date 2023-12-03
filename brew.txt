@@ -18,6 +18,7 @@ hugo
 ninja
 clang-format
 doxygen
+graphviz
 heroku
 sqlite
 yt-dlp
