@@ -13,19 +13,14 @@ source ~/dotfiles/dot/alias
 export EDITOR=/usr/bin/vim
 
 export PATH="/opt/homebrew/bin:$PATH"
-export PATH="/usr/local/sbin:$PATH"
-export PATH=$PATH:~/.composer/vendor/bin
-export PATH=/usr/local/mysql/bin:$PATH
-export PATH=$PATH:~/dotfiles/shell
-
-export PATH=$PATH:"/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+export PATH="$PATH:~/dotfiles/shell"
 
 export PATH=$PATH:~/Library/Android/sdk
 export PATH=$PATH:~/Library/Android/sdk/ndk-bundle
 export PATH=$PATH:~/Library/Android/sdk/tools
 export PATH=$PATH:~/Library/Android/sdk/platform-tools
 
-export PATH="/opt/homebrew/opt/postgresql@13/bin:$PATH"
-export PATH="/opt/homebrew/opt/node@16/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@16/bin:$PATH"
+export PATH="/opt/homebrew/opt/node@20/bin:$PATH"
 
 source ~/.env

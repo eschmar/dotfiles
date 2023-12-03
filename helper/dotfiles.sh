@@ -1,6 +1,6 @@
 #!/bin/bash
 dir=~/dotfiles/dot
-files="bash_profile nanorc alias vimrc env"
+files="bash_profile zshenv nanorc alias vimrc env"
 
 for file in $files; do
     rm -f ~/.$file
