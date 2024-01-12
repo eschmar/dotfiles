@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Git
-alias gl='git log --oneline --all --graph --decorate -n 10'
+alias gl='git log -n 10 --graph --pretty=format:"%C(yellow)%h%x09%Creset%C(cyan)%C(bold)%cd%Creset %s" --date=format-local:"%Y-%m-%d %H:%M:%S"'
 alias gitcount='git shortlog -s'
 alias gitworktree='function _gitworktree(){ git worktree add -b $1 $2  ; }; _gitworktree'
 
