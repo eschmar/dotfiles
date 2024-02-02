@@ -23,6 +23,9 @@ return {
     end,
   },
 
+  -- Git blame
+  { "tpope/vim-fugitive" },
+
   -- change trouble config
   {
     "folke/trouble.nvim",
