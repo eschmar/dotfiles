@@ -23,3 +23,5 @@ heroku
 sqlite
 yt-dlp
 blackhole-2ch
+ripgrep
+fd
