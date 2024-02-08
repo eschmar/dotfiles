@@ -25,3 +25,4 @@ yt-dlp
 blackhole-2ch
 ripgrep
 fd
+jq
