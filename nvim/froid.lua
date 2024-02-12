@@ -1,6 +1,8 @@
--- since this is just an example spec, don't actually load anything here and return an empty spec
--- stylua: ignore
--- if true then return {} end
+vim.opt.wrap = true
+
+vim.filetype.add({
+  extension = { templ = "templ" },
+})
 
 -- every spec file under the "plugins" directory will be loaded automatically by lazy.nvim
 --
@@ -8,6 +10,7 @@
 -- * add extra plugins
 -- * disable/enabled LazyVim plugins
 -- * override the configuration of LazyVim plugins
+
 return {
   -- https://github.com/loctvl842/monokai-pro.nvim
   {
@@ -16,7 +19,7 @@ return {
     priority = 1000, -- make sure to load this before all the other start plugins
     config = function()
       require("monokai-pro").setup({
-        filter = "machine"
+        filter = "machine",
       })
       -- load the colorscheme here
       vim.cmd([[colorscheme monokai-pro]])
@@ -73,7 +76,6 @@ return {
     opts = {
       ensure_installed = {
         "bash",
-        "html",
         "javascript",
         "json",
         "lua",
@@ -87,7 +89,9 @@ return {
         "go",
         "cpp",
         "c",
-        "make"
+        "make",
+        "html",
+        "templ",
       },
     },
   },
@@ -160,8 +164,8 @@ return {
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then
             cmp.select_next_item()
-            -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
-            -- this way you will only jump inside the snippet region
+          -- You could replace the expand_or_jumpable() calls with expand_or_locally_jumpable()
+          -- this way you will only jump inside the snippet region
           elseif luasnip.expand_or_jumpable() then
             luasnip.expand_or_jump()
           elseif has_words_before() then
