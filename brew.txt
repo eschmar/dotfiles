@@ -26,3 +26,4 @@ blackhole-2ch
 ripgrep
 fd
 jq
+difftastic
