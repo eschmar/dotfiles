@@ -2,6 +2,19 @@ vim.filetype.add({ extension = { templ = "templ" } })
 
 vim.opt.wrap = true
 
+-- vim.keymap.set("n", "ü", "[")
+-- vim.keymap.set("n", "ä", "{")
+-- vim.keymap.set("n", "¨", "]")
+-- vim.keymap.set("n", "à", "}")
+
+-- Disable autoformat for templ files
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "templ" },
+  callback = function()
+    vim.b.autoformat = false
+  end,
+})
+
 return {
   -- https://github.com/loctvl842/monokai-pro.nvim
   {
@@ -56,6 +69,44 @@ return {
     end,
   },
 
+  -- Apple PKL lang
+  {
+    "https://github.com/apple/pkl-neovim",
+    lazy = true,
+    event = "BufReadPre *.pkl",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+    },
+    build = function()
+      vim.cmd("TSInstall! pkl")
+    end,
+  },
+
+  {
+    "stevearc/conform.nvim",
+    optional = true,
+    opts = {
+      formatters_by_ft = {
+        ["javascript"] = { "prettier" },
+        ["javascriptreact"] = { "prettier" },
+        ["typescript"] = { "prettier" },
+        ["typescriptreact"] = { "prettier" },
+        ["vue"] = { "prettier" },
+        ["css"] = { "prettier" },
+        ["scss"] = { "prettier" },
+        ["less"] = { "prettier" },
+        ["html"] = { "prettier" },
+        ["json"] = { "prettier" },
+        ["jsonc"] = { "prettier" },
+        ["yaml"] = { "prettier" },
+        ["markdown"] = { "prettier" },
+        ["markdown.mdx"] = { "prettier" },
+        ["graphql"] = { "prettier" },
+        ["handlebars"] = { "prettier" },
+      },
+    },
+  },
+
   -- add jsonls and schemastore packages, and setup treesitter for json, json5 and jsonc
   { import = "lazyvim.plugins.extras.lang.json" },
 
@@ -76,6 +127,14 @@ return {
         "clang-format",
         "gopls",
       },
+    },
+  },
+
+  -- disable inlay hints by default
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      inlay_hints = { enabled = false },
     },
   },
 }
