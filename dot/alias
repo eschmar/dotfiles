@@ -25,7 +25,7 @@ alias decryptCompress='function _decryptCompress(){ openssl enc -aes-256-cbc -d 
 
 alias vid2fullhd='function _vid2fullhd(){ ffmpeg -i $1 -s 1080x1920 -acodec copy ${1%.*}-fhd.mp4  ; }; _vid2fullhd'
 alias vidMovToMp4='function _vidMovToMp4(){ ffmpeg -i $1 -vcodec h264 -acodec aac ${1%.*}.mp4 ; }; _vidMovToMp4'
-alias vidScaleTo='function _vidScaleTo(){ ffmpeg -i $1 -vf scale="$2:-1" ${1%.*}-$2w.mp4 ; }; _vidScaleTo'
+alias vidScaleTo='function _vidScaleTo(){ ffmpeg -i $1 -vf scale="$2:-2" ${1%.*}-$2w.mp4 ; }; _vidScaleTo'
 alias vidCleanFrames='function _vidCleanFrames(){ ffmpeg -i $1 -vf mpdecimate -vsync vfr ${1%.*}-clean.mp4  ; }; _vidCleanFrames'
 alias vidTemp='ffmpeg -f lavfi -i testsrc -t 30 -pix_fmt yuv420p vidTemp.mp4'
 
