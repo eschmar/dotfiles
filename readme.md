@@ -11,3 +11,6 @@ Holds parts of my personal dotfiles and macOS workstation setup steps.
 * [ ] `System Preferences` > `Security & Privacy` > `Require password immediately`
 * [ ] Download [OpenJDK 8 SE](https://www.azul.com/downloads/?version=java-8-lts&os=macos&package=jdk#zulu) and [the latest LTS](https://adoptium.net/en-GB/temurin/releases/?os=mac)
 * [ ] Replace git diff with [difftastic](https://difftastic.wilfred.me.uk/git.html)
+* [ ] Default Shell bash
+    * [ ] Add `/opt/homebrew/bin/bash` to `/etc/shells`
+    * [ ] `System Preferences` > `Users & Groups` > right click user > `Advanced Options...` > Login Shell

@@ -6,8 +6,8 @@ htop
 httpie
 imagemagick
 mpv
-postgresql@16
-node@20
+postgresql@17
+node@22
 tree
 yt-dlp
 pkg-config
@@ -27,3 +27,4 @@ ripgrep
 fd
 jq
 difftastic
+bash
