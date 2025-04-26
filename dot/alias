@@ -36,5 +36,5 @@ alias bashbible='open https://github.com/dylanaraps/pure-bash-bible'
 alias jarList='jar tvf'
 
 # Java versions
-alias j21="export JAVA_HOME=`/usr/libexec/java_home -v 21 -a arm64`; java -version"
-alias j8="export JAVA_HOME=`/usr/libexec/java_home -v 1.8 -a arm64`; java -version"
+alias j21="export JAVA_HOME=$(/usr/libexec/java_home -v 21 -a arm64); java -version"
+alias j8="export JAVA_HOME=$(/usr/libexec/java_home -v 1.8 -a arm64); java -version"
