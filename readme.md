@@ -4,6 +4,8 @@ Holds parts of my personal dotfiles and macOS workstation setup steps.
 * [ ] Install XCode
 * [ ] Set up ssh keys
 * [ ] Run `make`
+* [ ] `System Preferences` > `General` > `About` > Set device name.
+* [ ] `sudo scutil --set HostName "<device-name>"`.
 * [ ] `System Preferences` > `Spotlight` > Disable it all
 * [ ] `System Preferences` > `Keyboard` > select the `Use all F1, F2, etc. keys as standard function keys`.
 * [ ] `System Preferences` > `Shortcut` > Move focus to next window -> set to `alt + tab`
