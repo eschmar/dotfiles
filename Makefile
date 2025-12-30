@@ -48,3 +48,7 @@ screenshots:
 latex:
 	# install MacTeX
 	pip3 install Pygments
+
+mpv:
+	mkdir -p ~/.config/mpv
+	cp ~/dotfiles/mpv/mpv.conf ~/.config/mpv/mpv.conf
