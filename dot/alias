@@ -29,6 +29,7 @@ alias vidMovToMp4='function _vidMovToMp4(){ ffmpeg -i $1 -vcodec h264 -acodec aa
 alias vidScaleTo='function _vidScaleTo(){ ffmpeg -i $1 -vf scale="$2:-2" ${1%.*}-$2w.mp4 ; }; _vidScaleTo'
 alias vidCleanFrames='function _vidCleanFrames(){ ffmpeg -i $1 -vf mpdecimate -vsync vfr ${1%.*}-clean.mp4  ; }; _vidCleanFrames'
 alias vidTemp='ffmpeg -f lavfi -i testsrc -t 30 -pix_fmt yuv420p vidTemp.mp4'
+alias vid='f() { yt-dlp "${1%%\?*}" -t mp4; }; f'
 
 alias bashbible='open https://github.com/dylanaraps/pure-bash-bible'
 
