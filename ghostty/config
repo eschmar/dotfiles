@@ -5,3 +5,4 @@ confirm-close-surface = false
 quit-after-last-window-closed = true
 macos-option-as-alt = left
 shell-integration = bash
+keybind = shift+enter=text:\x1b\r
