@@ -28,4 +28,7 @@ fd
 jq
 difftastic
 bash
+wget
 sox
+flyctl
+go
