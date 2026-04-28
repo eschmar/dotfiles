@@ -41,4 +41,5 @@ alias jarList='jar tvf'
 
 # Java versions
 alias j21="export JAVA_HOME=$(/usr/libexec/java_home -v 21 -a arm64); java -version"
+alias j25="export JAVA_HOME=$(/usr/libexec/java_home -v 25 -a arm64); java -version"
 alias j8="export JAVA_HOME=$(/usr/libexec/java_home -v 1.8 -a arm64); java -version"
