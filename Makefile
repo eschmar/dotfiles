@@ -3,7 +3,7 @@ CYAN=\033[0;36m
 MAGENTA=\033[0;35m
 NC=\033[0m
 
-default: welcome git brew brewinstall vim dotfiles finder screenshots
+default: welcome git brew brewinstall vim dotfiles finder screenshots mpv
 
 welcome:
 	@echo " > ${MAGENTA}Configuring all the things.${NC}"
