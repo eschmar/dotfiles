@@ -1,0 +1,129 @@
+#!/usr/bin/env bash
+# sandbox — sandboxes as OrbStack isolated machines,
+# stamped out by cloning a provisioned "golden" base machine.
+set -euo pipefail
+
+SANDBOX_ROOT="${SANDBOX_ROOT:-$HOME/Sandboxes}"
+DISTRO="${SANDBOX_DISTRO:-debian}"    # debian: real chromium apt package
+BASE="${SANDBOX_BASE:-sandbox-base}"
+TEMPLATE_DIR="${TEMPLATE_DIR:-$HOME/dotfiles/sandbox}"
+
+usage() {
+  cat <<'EOF'
+Usage: sandbox <command> [args]
+
+  base                   Build/rebuild the golden base machine from setup.sh
+                         (slow, once; run again after editing setup.sh)
+  new <name>             Clone the base into a new sandbox (seconds),
+                         mount ~/Sandboxes/<name> at /workspace
+  shell <name>           Shell into a sandbox
+  ls                     List machines
+  rm <name>              Delete a sandbox machine (asks about the folder)
+
+Dev servers: bind to 0.0.0.0, open http://<name>.orb.local:<port> on host.
+EOF
+}
+
+provision() {
+  orb -m "$1" sudo env SETUP_USER="$USER" bash -s < "$TEMPLATE_DIR/setup.sh"
+}
+
+isolate() {  # enforce sandbox settings (verify key names once: orb config show)
+  orb config set "machine.$1.isolated" true
+  orb config set "machine.$1.isolate_network" true
+}
+
+gen_name() {
+  local adjectives=(autumn bitter bold broken calm cold crimson curly damp dawn
+    dry empty falling fancy floral fragrant frosty green hidden holy icy late
+    lingering little lively misty muddy nameless patient plain polished proud
+    quiet rapid raspy restless rough shy silent small snowy soft solitary
+    sparkling spring still summer twilight wandering weathered white wild
+    winter withered young)
+  local nouns=(brook bird breeze bush butterfly cherry cloud darkness dew dream
+    dust feather field fire firefly flower fog forest frog frost glade glitter
+    grass haze hill lake leaf log meadow moon morning mountain night paper
+    pine pond rain resonance river sea shadow shape silence sky smoke snow
+    sound star sun sunset surf thunder tree violet voice water wave wildflower
+    wind wood)
+  local name try=0
+  while :; do
+    name="${adjectives[RANDOM % ${#adjectives[@]}]}-${nouns[RANDOM % ${#nouns[@]}]}"
+    try=$((try+1))
+    # add a short suffix if taken (or always, after a few collisions)
+    if orb list | grep -qw "$name" || [ -e "$SANDBOX_ROOT/$name" ]; then
+      [ "$try" -ge 3 ] && { name="$name-$(head -c4 /dev/urandom | od -An -tx1 | tr -d ' \n')"; echo "$name"; return; }
+      continue
+    fi
+    echo "$name"; return
+  done
+}
+
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+  base)
+    if orb list | grep -qw "$BASE"; then
+      read -r -p "Rebuild base machine '$BASE' from scratch? [y/N] " ans
+      [ "$ans" = "y" ] || exit 0
+      orb delete -f "$BASE"
+    fi
+    orb create --isolated --isolate-network "$DISTRO" "$BASE"
+    provision "$BASE"
+    orb stop "$BASE"
+    echo "base ready — create sandboxes with: sandbox new <name>"
+    ;;
+  new)
+    name="${1:-$(gen_name)}"
+    orb list | grep -qw "$BASE" || { echo "error: no base machine — run: sandbox base" >&2; exit 1; }
+    dir="$SANDBOX_ROOT/$name"
+    mkdir -p "$dir"
+    orb clone "$BASE" "$name"
+    isolate "$name"
+    orb config set "machine.$name.mounts" "$dir:/workspace"
+    orb start "$name"
+    # Remove passwordless sudo inside the sandbox so a bypass-mode agent
+    # cannot undo the firewall. Admin access stays via: sandbox root <name>
+    orb -m "$name" -u root gpasswd -d "$USER" sudo > /dev/null 2>&1 || true
+    echo "ready: sandbox shell $name"
+    ;;
+  shell)
+    name="${1:?usage: sandbox shell <name>}"
+    exec orb -m "$name" bash -lc 'cd /workspace 2>/dev/null; exec bash -l'
+    ;;
+  ls)
+    orb list
+    ;;
+  rm)
+    name="${1:?usage: sandbox rm <name>}"
+    [ "$name" = "$BASE" ] && { echo "error: use 'sandbox base' to manage the base machine" >&2; exit 1; }
+    orb delete "$name"
+    read -r -p "Also delete $SANDBOX_ROOT/$name? [y/N] " ans
+    [ "$ans" = "y" ] && rm -rf "${SANDBOX_ROOT:?}/${name:?}" && echo "folder deleted."
+    ;;
+  root)
+    name="${1:?usage: sandbox root <name>}"
+    exec orb -m "$name" -u root bash -l
+    ;;
+  completion)
+    cat <<'EOF'
+_sandbox_complete() {
+  local cur="${COMP_WORDS[COMP_CWORD]}"
+  if [ "$COMP_CWORD" -eq 1 ]; then
+    COMPREPLY=($(compgen -W "base new shell root ls rm completion help" -- "$cur"))
+    return
+  fi
+  case "${COMP_WORDS[1]}" in
+    shell|root|rm)
+      local names
+      names="$( { ls -1 "${SANDBOX_ROOT:-$HOME/Sandboxes}" 2>/dev/null;
+                  orb list 2>/dev/null | awk '{print $1}'; } \
+                | sort -u | grep -vE '^(NAME|sandbox-base)$' )"
+      COMPREPLY=($(compgen -W "$names" -- "$cur"))
+      ;;
+  esac
+}
+complete -F _sandbox_complete sandbox
+EOF
+    ;;
+  *) usage ;;
+esac
