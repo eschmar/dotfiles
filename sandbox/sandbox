@@ -12,25 +12,51 @@ usage() {
   cat <<'EOF'
 Usage: sandbox <command> [args]
 
+Machines:
   base                   Build/rebuild the golden base machine from setup.sh
                          (slow, once; run again after editing setup.sh)
-  new <name>             Clone the base into a new sandbox (seconds),
-                         mount ~/Sandboxes/<name> at /workspace
+  new [name]             Clone the base into a new sandbox (seconds),
+                         mount ~/Sandboxes/<name> at /workspace;
+                         a name is generated if omitted
   shell <name>           Shell into a sandbox
+  root <name>            Admin (root) shell into a sandbox
   ls                     List machines
   rm <name>              Delete a sandbox machine (asks about the folder)
+
+Code flow (run from repository):
+  seed <name> [--exclude=PATH ...] [--mock=SRC[:DST] ...]
+                         Copy tracked files into the sandbox (minus excludes),
+                         overlay mocks, commit a fresh history-free baseline
+  export <name>          Write a review-me patch of all sandbox changes
+                         since baseline into the current directory
+
+Other:
+  completion             Print shell completion; add to your rc:
+                         eval "$(sandbox completion)"
 
 Dev servers: bind to 0.0.0.0, open http://<name>.orb.local:<port> on host.
 EOF
 }
 
-provision() {
-  orb -m "$1" sudo env SETUP_USER="$USER" bash -s < "$TEMPLATE_DIR/setup.sh"
+machine_exists() {
+  # exact match on the name column
+  orb list 2>/dev/null | awk -v n="$1" '$1 == n { found=1 } END { exit !found }'
 }
 
-isolate() {  # enforce sandbox settings (verify key names once: orb config show)
-  orb config set "machine.$1.isolated" true
-  orb config set "machine.$1.isolate_network" true
+# orb without its interactive progress UI: piping stdout makes it a non-TTY,
+# so orb prints plain lines instead of alternate-screen redraws (orbstack#2519).
+# pipefail preserves orb's exit status through the pipe.
+qorb() {
+  orb "$@" 2>&1 | cat
+}
+
+provision() {
+  qorb -m "$1" sudo env SETUP_USER="$USER" bash -s < "$TEMPLATE_DIR/setup.sh"
+}
+
+isolate() {
+  qorb config set "machine.$1.isolated" true
+  qorb config set "machine.$1.isolate_network" true
 }
 
 gen_name() {
@@ -50,7 +76,6 @@ gen_name() {
   while :; do
     name="${adjectives[RANDOM % ${#adjectives[@]}]}-${nouns[RANDOM % ${#nouns[@]}]}"
     try=$((try+1))
-    # add a short suffix if taken (or always, after a few collisions)
     if machine_exists "$name" || [ -e "$SANDBOX_ROOT/$name" ]; then
       [ "$try" -ge 3 ] && { name="$name-$(head -c4 /dev/urandom | od -An -tx1 | tr -d ' \n')"; echo "$name"; return; }
       continue
@@ -59,39 +84,28 @@ gen_name() {
   done
 }
 
-machine_exists() {
-  orb list 2>/dev/null | grep -w -- "$1" > /dev/null
-}
-
-# orb without its interactive progress UI: piping stdout makes it a non-TTY,
-# so orb prints plain lines instead of cursor-addressed redraws.
-# pipefail preserves orb's exit status through the pipe.
-qorb() {
-  orb "$@" 2>&1 | cat
-}
-
 cmd="${1:-help}"; shift || true
 case "$cmd" in
   base)
     if machine_exists "$BASE"; then
       read -r -p "Rebuild base machine '$BASE' from scratch? [y/N] " ans
       [ "$ans" = "y" ] || exit 0
-      orb delete -f "$BASE"
+      qorb delete -f "$BASE"
     fi
-    orb create --isolated --isolate-network "$DISTRO" "$BASE"
+    qorb create --isolated --isolate-network "$DISTRO" "$BASE"
     provision "$BASE"
-    orb stop "$BASE"
-    echo "base ready — create sandboxes with: sandbox new <name>"
+    qorb stop "$BASE"
+    echo "base ready — create sandboxes with: sandbox new [name]"
     ;;
   new)
-    name="${1:-$(gen_name)}"
     machine_exists "$BASE" || { echo "error: no base machine — run: sandbox base" >&2; exit 1; }
+    name="${1:-$(gen_name)}"
     dir="$SANDBOX_ROOT/$name"
     mkdir -p "$dir"
-    orb clone "$BASE" "$name"
+    qorb clone "$BASE" "$name"
     isolate "$name"
-    orb config set "machine.$name.mounts" "$dir:/workspace"
-    orb start "$name"
+    qorb config set "machine.$name.mounts" "$dir:/workspace"
+    qorb start "$name"
     # Remove passwordless sudo inside the sandbox so a bypass-mode agent
     # cannot undo the firewall. Admin access stays via: sandbox root <name>
     orb -m "$name" -u root gpasswd -d "$USER" sudo > /dev/null 2>&1 || true
@@ -102,11 +116,15 @@ case "$cmd" in
     # exec orb -m "$name" bash -lc 'cd /workspace 2>/dev/null; exec bash -l'
     exec ssh -t "$name@orb" 'cd /workspace 2>/dev/null; exec bash -l'
     ;;
+  root)
+    name="${1:?usage: sandbox root <name>}"
+    exec ssh -t "root@$name@orb" 'exec bash -l'
+    ;;
   seed)
-    # run inside the real repo:  sandbox seed <name> [--exclude=PATH ...] [--mock=SRC:DST ...]
-    name="${1:?usage: sandbox seed <name> [--exclude=PATH ...] [--mock=SRC:DST ...]}"; shift
+    name="${1:?usage: sandbox seed <name> [--exclude=PATH ...] [--mock=SRC[:DST] ...]}"; shift
     src="$(git rev-parse --show-toplevel 2>/dev/null)" \
       || { echo "error: not inside a git repository" >&2; exit 1; }
+    machine_exists "$name" || { echo "error: no sandbox machine '$name' — run: sandbox new $name" >&2; exit 1; }
 
     excl=(); mocks=()
     for a in "$@"; do
@@ -122,14 +140,14 @@ case "$cmd" in
     mkdir -p "$dst"
 
     # tracked files only (untracked secrets like .env never copy), minus excludes
-    git -C "$src" ls-files -z -- . "${excl[@]}" | rsync -0a --files-from=- "$src/" "$dst/"
+    # (${arr[@]+...} guard: empty arrays + set -u are fatal on macOS's bash 3.2)
+    git -C "$src" ls-files -z -- . ${excl[@]+"${excl[@]}"} \
+      | rsync -0a --files-from=- "$src/" "$dst/"
 
-    # mocks: copy SRC (a path on your Mac) to DST (path inside the repo copy)
-    for m in "${mocks[@]}"; do
-      # strip trailing slash
+    # mocks: copy SRC (a path on your Mac) into the repo copy;
+    # DST defaults to SRC's folder name
+    for m in ${mocks[@]+"${mocks[@]}"}; do
       msrc="${m%%:*}"; msrc="${msrc%/}"
-
-      # if no DST given, use folder name
       case "$m" in
         *:*) mdst="${m#*:}" ;;
         *)   mdst="$(basename "$msrc")" ;;
@@ -139,7 +157,7 @@ case "$cmd" in
 
     # fresh history-free baseline, committed by the guest's git
     qorb -m "$name" bash -lc \
-      'cd /workspace/repo && git init -q -b main 2>/dev/null; git add -A && git commit -qm baseline'
+      'set -e; cd /workspace/repo; git init -q -b main; git add -A; git commit -qm baseline'
     echo "seeded: $dst"
     ;;
   export)
@@ -147,16 +165,15 @@ case "$cmd" in
     name="${1:?usage: sandbox export <name>}"
     git rev-parse --show-toplevel > /dev/null 2>&1 \
       || { echo "error: not inside a git repository" >&2; exit 1; }
+    machine_exists "$name" || { echo "error: no sandbox machine '$name'" >&2; exit 1; }
     [ -d "$SANDBOX_ROOT/$name/repo" ] \
       || { echo "error: no seeded repo in sandbox '$name'" >&2; exit 1; }
 
     # patch is generated by the GUEST's git (never run host git against the
     # agent's repo copy — its .git/config is agent-writable), written to the
     # mounted folder, then moved into the current directory
-    qorb -m "$name" bash -lc '
-      cd /workspace/repo
-      git add -A
-      git diff --cached > /workspace/export.patch'
+    qorb -m "$name" bash -lc \
+      'set -e; cd /workspace/repo; git add -A; git diff --cached > /workspace/export.patch; git diff --cached --stat'
 
     patch="$SANDBOX_ROOT/$name/export.patch"
     [ -s "$patch" ] || { echo "no changes since baseline — nothing to export"
@@ -173,25 +190,22 @@ case "$cmd" in
   rm)
     name="${1:?usage: sandbox rm <name>}"
     [ "$name" = "$BASE" ] && { echo "error: use 'sandbox base' to manage the base machine" >&2; exit 1; }
-    orb delete "$name"
+    qorb delete "$name"
     read -r -p "Also delete $SANDBOX_ROOT/$name? [y/N] " ans
-    [ "$ans" = "y" ] && rm -rf "${SANDBOX_ROOT:?}/${name:?}" && echo "folder deleted."
-    ;;
-  root)
-    name="${1:?usage: sandbox root <name>}"
-    # exec orb -m "$name" -u root bash -l
-    exec ssh -t "root@$name@orb" 'exec bash -l'
+    if [ "$ans" = "y" ]; then
+      rm -rf "${SANDBOX_ROOT:?}/${name:?}"
+    fi
     ;;
   completion)
     cat <<'EOF'
 _sandbox_complete() {
   local cur="${COMP_WORDS[COMP_CWORD]}"
   if [ "$COMP_CWORD" -eq 1 ]; then
-    COMPREPLY=($(compgen -W "base new shell root ls rm completion help" -- "$cur"))
+    COMPREPLY=($(compgen -W "base new shell root seed export ls rm completion help" -- "$cur"))
     return
   fi
   case "${COMP_WORDS[1]}" in
-    shell|root|rm)
+    shell|root|rm|seed|export)
       local names
       names="$( { ls -1 "${SANDBOX_ROOT:-$HOME/Sandboxes}" 2>/dev/null;
                   orb list 2>/dev/null | awk '{print $1}'; } \
