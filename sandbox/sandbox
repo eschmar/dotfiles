@@ -51,7 +51,7 @@ gen_name() {
     name="${adjectives[RANDOM % ${#adjectives[@]}]}-${nouns[RANDOM % ${#nouns[@]}]}"
     try=$((try+1))
     # add a short suffix if taken (or always, after a few collisions)
-    if orb list | grep -qw "$name" || [ -e "$SANDBOX_ROOT/$name" ]; then
+    if machine_exists "$name" || [ -e "$SANDBOX_ROOT/$name" ]; then
       [ "$try" -ge 3 ] && { name="$name-$(head -c4 /dev/urandom | od -An -tx1 | tr -d ' \n')"; echo "$name"; return; }
       continue
     fi
@@ -59,10 +59,14 @@ gen_name() {
   done
 }
 
+machine_exists() {
+  orb list 2>/dev/null | grep -w -- "$1" > /dev/null
+}
+
 cmd="${1:-help}"; shift || true
 case "$cmd" in
   base)
-    if orb list | grep -qw "$BASE"; then
+    if machine_exists "$BASE"; then
       read -r -p "Rebuild base machine '$BASE' from scratch? [y/N] " ans
       [ "$ans" = "y" ] || exit 0
       orb delete -f "$BASE"
@@ -74,7 +78,7 @@ case "$cmd" in
     ;;
   new)
     name="${1:-$(gen_name)}"
-    orb list | grep -qw "$BASE" || { echo "error: no base machine — run: sandbox base" >&2; exit 1; }
+    machine_exists "$BASE" || { echo "error: no base machine — run: sandbox base" >&2; exit 1; }
     dir="$SANDBOX_ROOT/$name"
     mkdir -p "$dir"
     orb clone "$BASE" "$name"
