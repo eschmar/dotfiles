@@ -99,7 +99,8 @@ case "$cmd" in
     ;;
   shell)
     name="${1:?usage: sandbox shell <name>}"
-    exec orb -m "$name" bash -lc 'cd /workspace 2>/dev/null; exec bash -l'
+    # exec orb -m "$name" bash -lc 'cd /workspace 2>/dev/null; exec bash -l'
+    exec ssh -t "$name@orb" 'cd /workspace 2>/dev/null; exec bash -l'
     ;;
   seed)
     # run inside the real repo:  sandbox seed <name> [--exclude=PATH ...] [--mock=SRC:DST ...]
