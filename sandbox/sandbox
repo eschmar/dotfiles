@@ -154,7 +154,8 @@ case "$cmd" in
     ;;
   root)
     name="${1:?usage: sandbox root <name>}"
-    exec orb -m "$name" -u root bash -l
+    # exec orb -m "$name" -u root bash -l
+    exec ssh -t "root@$name@orb" 'exec bash -l'
     ;;
   completion)
     cat <<'EOF'
