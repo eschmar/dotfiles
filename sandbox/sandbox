@@ -63,6 +63,13 @@ machine_exists() {
   orb list 2>/dev/null | grep -w -- "$1" > /dev/null
 }
 
+# orb without its interactive progress UI: piping stdout makes it a non-TTY,
+# so orb prints plain lines instead of cursor-addressed redraws.
+# pipefail preserves orb's exit status through the pipe.
+qorb() {
+  orb "$@" 2>&1 | cat
+}
+
 cmd="${1:-help}"; shift || true
 case "$cmd" in
   base)
@@ -93,6 +100,46 @@ case "$cmd" in
   shell)
     name="${1:?usage: sandbox shell <name>}"
     exec orb -m "$name" bash -lc 'cd /workspace 2>/dev/null; exec bash -l'
+    ;;
+  seed)
+    # run inside the real repo:  sandbox seed <name> [--exclude=PATH ...] [--mock=SRC:DST ...]
+    name="${1:?usage: sandbox seed <name> [--exclude=PATH ...] [--mock=SRC:DST ...]}"; shift
+    src="$(git rev-parse --show-toplevel 2>/dev/null)" \
+      || { echo "error: not inside a git repository" >&2; exit 1; }
+
+    excl=(); mocks=()
+    for a in "$@"; do
+      case "$a" in
+        --exclude=*) excl+=(":(exclude)${a#--exclude=}") ;;
+        --mock=*)    mocks+=("${a#--mock=}") ;;
+        *) echo "error: unknown arg $a" >&2; exit 1 ;;
+      esac
+    done
+
+    dst="$SANDBOX_ROOT/$name/repo"
+    rm -rf "$dst"
+    mkdir -p "$dst"
+
+    # tracked files only (untracked secrets like .env never copy), minus excludes
+    git -C "$src" ls-files -z -- . "${excl[@]}" | rsync -0a --files-from=- "$src/" "$dst/"
+
+    # mocks: copy SRC (a path on your Mac) to DST (path inside the repo copy)
+    for m in "${mocks[@]}"; do
+      # strip trailing slash
+      msrc="${m%%:*}"; msrc="${msrc%/}"
+
+      # if no DST given, use folder name
+      case "$m" in
+        *:*) mdst="${m#*:}" ;;
+        *)   mdst="$(basename "$msrc")" ;;
+      esac
+      rsync -a "$msrc/" "$dst/$mdst/"
+    done
+
+    # fresh history-free baseline, committed by the guest's git
+    qorb -m "$name" bash -lc \
+      'cd /workspace/repo && git init -q -b main 2>/dev/null; git add -A && git commit -qm baseline'
+    echo "seeded: $dst"
     ;;
   ls)
     orb list
