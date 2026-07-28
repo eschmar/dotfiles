@@ -141,7 +141,7 @@ case "$cmd" in
 
     # tracked files only (untracked secrets like .env never copy), minus excludes
     # (${arr[@]+...} guard: empty arrays + set -u are fatal on macOS's bash 3.2)
-    git -C "$src" ls-files -z -- . ${excl[@]+"${excl[@]}"} \
+    git -C "$src" ls-files -z --recurse-submodules -- . ${excl[@]+"${excl[@]}"} \
       | rsync -0a --files-from=- "$src/" "$dst/"
 
     # mocks: copy SRC (a path on your Mac) into the repo copy;
